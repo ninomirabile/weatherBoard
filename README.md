@@ -1,7 +1,14 @@
 # 🌤️ WeatherBoard
 
-**WeatherBoard** is a fullstack project designed to display real-time weather data through a modern React frontend and a FastAPI backend.  
-It is structured to evolve from mock data to real-time communication via MQTT (Phase 2).
+![WeatherBoard Dashboard Demo](docs/weatherboard-demo.png)
+_Example of WeatherBoard dashboard in action_
+
+**WeatherBoard** is a fullstack project for real-time weather data visualization through a modern React dashboard and a FastAPI backend.  
+The data source can be chosen between simulated (mock) data or real data via MQTT (e.g., from an external simulator).
+
+---
+
+> 📖 **See also:** [Integration & Data Source Switch Guide (Mock/MQTT)](docs/INTEGRATION.md)
 
 ---
 
@@ -10,84 +17,129 @@ It is structured to evolve from mock data to real-time communication via MQTT (P
 ```
 weatherboard/
 ├── frontend/        # React + Vite + Zustand + Tailwind
-├── backend/         # FastAPI with typed endpoints and MQTT-ready
+├── backend/         # FastAPI with mock/MQTT data source switch
 ├── .github/         # GitHub Actions CI pipelines
 ├── community/       # CONTRIBUTING, LICENSE, etc.
-└── cursor.prompt.md # Cursor AI project context
+└── docs/            # Documentation and assets
 ```
 
 ---
 
-## 🔹 Phase 1 – Simulated Weather Data
+## 🔹 Operating Modes
 
-- The backend provides weather data for predefined cities via REST API.
-- The frontend fetches and displays this data in a responsive dashboard.
-- Data is simulated (randomized) at each request.
+WeatherBoard backend can be started in two modes:
 
----
+- **Mock**: generates random data on each request (default, ideal for development and testing)
+- **MQTT**: subscribes to an MQTT broker and serves real-time data received (integration with simulators or real sensors)
 
-## 🔸 Phase 2 – MQTT Integration
+The mode is selected via the `DATA_SOURCE` environment variable:
 
-- External simulators will publish weather data via MQTT.
-- The backend will subscribe to MQTT topics and serve real-time data.
-- The frontend will consume the same REST interface (no change).
+```bash
+# Mock mode (default)
+DATA_SOURCE=mock
 
----
-
-## 🚀 Tech Stack
-
-| Layer     | Technology              |
-|-----------|--------------------------|
-| Frontend  | React 18, Vite, Zustand, Tailwind CSS |
-| Backend   | FastAPI, Pydantic, MQTT (future) |
-| CI/CD     | GitHub Actions           |
-| Testing   | Vitest, Pytest           |
-| DevOps    | Docker, docker-compose   |
-
----
-
-## 📦 Features
-
-- Modular frontend (Feature-Sliced Design)
-- Typed REST endpoints
-- CI pipelines for both frontend and backend
-- Ready-to-integrate MQTT architecture
-- Open Source–ready (community standards included)
+# MQTT mode
+DATA_SOURCE=mqtt
+MQTT_BROKER_HOST=localhost
+MQTT_BROKER_PORT=1883
+```
 
 ---
 
 ## 📜 Usage
 
 ### 🖥️ Frontend
-```
+```bash
 cd frontend
 npm install
 npm run dev
+# Open http://localhost:5173 in your browser
 ```
 
 ### 🐍 Backend
-```
+```bash
 cd backend
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+# Start in mock mode (default)
+uvicorn app.main:app --reload --port 8000 --host 0.0.0.0
+# Start in MQTT mode
+DATA_SOURCE=mqtt MQTT_BROKER_HOST=localhost MQTT_BROKER_PORT=1883 uvicorn app.main:app --reload --port 8000 --host 0.0.0.0
 ```
+
+---
+
+## 📡 Data Simulation and MQTT Integration
+
+WeatherBoard can receive real-time data from any compatible MQTT broker.
+To test the dashboard with simulated data, you can use an [MQTT Simulator](https://github.com/your-user/mqtt-simulator) (separate open source project).
+
+### Example local setup
+
+1. Start Mosquitto (MQTT broker):
+   ```bash
+   docker run -it -p 1883:1883 eclipse-mosquitto
+   ```
+2. Start the MQTT simulator:
+   ```bash
+   python -m mqtt_simulator.cli --profile weather --broker localhost --interval 2
+   ```
+3. Start the WeatherBoard backend (in MQTT mode):
+   ```bash
+   DATA_SOURCE=mqtt MQTT_BROKER_HOST=localhost MQTT_BROKER_PORT=1883 uvicorn app.main:app --reload --port 8000 --host 0.0.0.0
+   ```
+4. Start the frontend and view the dashboard!
+
+---
+
+## 🟢 API Response Structure
+
+All API endpoints return a standardized response object. Example for `/api/v1/weather`:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "city": "Milano",
+      "temperature": 18.3,
+      "humidity": 65.5,
+      "wind_speed": 10.4,
+      "description": "Heavy Rain",
+      "timestamp": "2024-07-03T11:34:00Z"
+    }
+  ],
+  "error": null
+}
+```
+
+- For single city: `data` is an object, for all cities: `data` is a list.
+- On error: `success` is `false` and `error` contains the message.
+
+---
+
+## 🩺 Health Check
+
+A health check endpoint is available at:
+```
+GET /health
+```
+Returns backend status and, if in MQTT mode, MQTT connection info.
 
 ---
 
 ## ✅ Community Standards
 
-This project follows GitHub community standards:
-- [x] LICENSE (MIT)
-- [x] CONTRIBUTING.md
-- [x] CODE_OF_CONDUCT.md
-- [x] SECURITY.md
+This project follows open source standards:
+- [x] [LICENSE](community/LICENSE) (MIT)
+- [x] [CONTRIBUTING.md](community/CONTRIBUTING.md)
+- [x] [CODE_OF_CONDUCT.md](community/CODE_OF_CONDUCT.md)
+- [x] [SECURITY.md](community/SECURITY.md)
 
 ---
 
 ## 🤖 AI Development
 
-The codebase is AI-friendly (Cursor, Copilot) with clear structure and typed interfaces.  
-See `cursor.prompt.md` for project-wide architecture rules.
+The backend is designed to be AI-friendly (Cursor, Copilot) and easily extendable with new data sources.
 
 ---
 
@@ -98,19 +150,12 @@ See `cursor.prompt.md` for project-wide architecture rules.
 
 ---
 
-## 📡 MQTT Integration (Planned)
+## ⚠️ Error Handling
 
-The backend will subscribe to:
-```
-/weather/milano
-/weather/roma
-/weather/london
-```
-
-And expose updated REST endpoints without breaking the frontend interface.
+The dashboard displays errors in a user-friendly way via toast notifications in the top-right corner.
 
 ---
 
 ## 🛡️ License
 
-MIT — see `LICENSE` file for details.
+MIT — see [LICENSE](community/LICENSE) for details.

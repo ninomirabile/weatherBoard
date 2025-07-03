@@ -1,0 +1,1 @@
+# Pydantic models for WeatherBoard API 

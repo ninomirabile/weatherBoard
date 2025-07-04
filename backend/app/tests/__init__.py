@@ -1,1 +1,1 @@
-# Tests for WeatherBoard backend 
+# Test modules for WeatherBoard 

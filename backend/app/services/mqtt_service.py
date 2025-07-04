@@ -6,6 +6,7 @@ from threading import Thread, Lock
 import paho.mqtt.client as mqtt
 from app.models.weather import WeatherData
 
+
 class MQTTWeatherService:
     """Service for managing weather data from MQTT broker"""
     AVAILABLE_CITIES = ["milano", "roma", "london", "paris", "berlin"]
@@ -14,14 +15,14 @@ class MQTTWeatherService:
     def __init__(self):
         self.broker_host = os.getenv("MQTT_BROKER_HOST", "localhost")
         self.broker_port = int(os.getenv("MQTT_BROKER_PORT", 1883))
-        self._weather_cache: Dict[str, tuple[WeatherData, float]] = {}  # city -> (WeatherData, timestamp)
+        self._weather_cache: Dict[str, tuple[WeatherData, float]] = {}
         self._cache_lock = Lock()
         self._client = mqtt.Client()
         self._client.on_connect = self._on_connect
         self._client.on_message = self._on_message
         self._client.on_disconnect = self._on_disconnect
         self._running = True
-        
+
         # Start MQTT client in a background thread
         self._thread = Thread(target=self._start_mqtt_loop, daemon=True)
         self._thread.start()
@@ -54,7 +55,7 @@ class MQTTWeatherService:
             # Validate and parse with Pydantic
             weather = WeatherData(**data)
             city = weather.city.lower()
-            
+
             with self._cache_lock:
                 self._weather_cache[city] = (weather, time.time())
             print(f"[MQTT] Updated cache for {city}: {weather}")

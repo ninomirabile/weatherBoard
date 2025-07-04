@@ -1,1 +1,1 @@
-# Pydantic models for WeatherBoard API 
+# Data models for WeatherBoard 

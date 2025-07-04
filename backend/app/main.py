@@ -44,8 +44,10 @@ async def health_check():
     if data_source == "mqtt":
         weather_service = get_weather_data_service()
         if hasattr(weather_service, '_client'):
-            mqtt_status = ("connected" if weather_service._client.is_connected()
-                          else "disconnected")
+            mqtt_status = (
+                "connected" if weather_service._client.is_connected()
+                else "disconnected"
+            )
             health_status["mqtt_status"] = mqtt_status
             health_status["mqtt_broker"] = (
                 f"{weather_service.broker_host}:{weather_service.broker_port}"

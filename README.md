@@ -166,6 +166,7 @@ The backend is designed to be AI-friendly (Cursor, Copilot) and easily extendabl
 
 - Frontend: `npm run test`
 - Backend: `pytest`
+- Backend lint: `ruff check app/` (consigliato, vedi `backend/ruff.toml` per la configurazione)
 
 ---
 

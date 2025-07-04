@@ -4,9 +4,11 @@ import { WeatherState, WeatherResponse, CitiesResponse, WeatherListResponse } fr
 const API_BASE_URL = 'http://localhost:8000/api/v1';
 
 interface WeatherStore extends WeatherState {
+  selectedCity: string;
   fetchCities: () => Promise<void>;
   fetchWeatherData: (city: string) => Promise<void>;
   fetchAllWeatherData: () => Promise<void>;
+  setSelectedCity: (city: string) => void;
   clearError: () => void;
 }
 
@@ -15,6 +17,11 @@ export const useWeatherStore = create<WeatherStore>((set, get) => ({
   cities: [],
   loading: false,
   error: null,
+  selectedCity: '',
+
+  setSelectedCity: (city: string) => {
+    set({ selectedCity: city });
+  },
 
   fetchCities: async () => {
     set({ loading: true, error: null });

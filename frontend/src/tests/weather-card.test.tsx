@@ -33,7 +33,7 @@ describe('WeatherCard', () => {
   it('formats timestamp correctly', () => {
     render(<WeatherCard weather={mockWeatherData} />);
     // Cerca un testo che assomiglia a un orario (es: 12:00, 12.00, ecc.)
-    const timeRegex = /\b\d{2}[:\.]\d{2}\b/;
+    const timeRegex = /\b\d{2}[:.]\d{2}\b/;
     const timeElement = screen.getByText((content) => timeRegex.test(content));
     expect(timeElement).toBeInTheDocument();
   });

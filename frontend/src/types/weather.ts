@@ -29,4 +29,5 @@ export interface WeatherState {
   cities: string[];
   loading: boolean;
   error: string | null;
+  selectedCity: string;
 } 

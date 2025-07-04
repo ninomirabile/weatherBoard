@@ -10,7 +10,7 @@ describe('CitySelector', () => {
     render(<CitySelector cities={mockCities} onCitySelect={mockOnCitySelect} />);
     
     expect(screen.getByText('Select City:')).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Choose a city...' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'All Cities' })).toBeInTheDocument();
     // Check if cities are rendered
     mockCities.forEach(city => {
       const cityName = city.charAt(0).toUpperCase() + city.slice(1);
@@ -28,13 +28,13 @@ describe('CitySelector', () => {
     expect(mockOnCitySelect).toHaveBeenCalledWith('milano');
   });
 
-  it('does not call onCitySelect when empty option is selected', () => {
+  it('calls onCitySelect with empty string when "All Cities" is selected', () => {
     const mockOnCitySelect = vi.fn();
     render(<CitySelector cities={mockCities} onCitySelect={mockOnCitySelect} />);
     
     const select = screen.getByRole('combobox');
     fireEvent.change(select, { target: { value: '' } });
     
-    expect(mockOnCitySelect).not.toHaveBeenCalled();
+    expect(mockOnCitySelect).toHaveBeenCalledWith('');
   });
 }); 

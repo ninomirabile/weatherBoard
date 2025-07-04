@@ -12,6 +12,25 @@ The data source can be chosen between simulated (mock) data or real data via MQT
 
 ---
 
+## 🚀 Quick Start
+
+### Using the start script (recommended)
+```bash
+# Start in mock mode (default)
+./start.sh
+
+# Start in MQTT mode
+./start.sh mqtt
+
+# Stop all services
+./stop.sh
+```
+
+### Manual start
+See detailed instructions below.
+
+---
+
 ## 🧱 Architecture Overview
 
 ```

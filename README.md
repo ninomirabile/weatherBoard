@@ -149,7 +149,7 @@ Returns backend status and, if in MQTT mode, MQTT connection info.
 ## ✅ Community Standards
 
 This project follows open source standards:
-- [x] [LICENSE](community/LICENSE) (MIT)
+- [x] [LICENSE](community/LICENSE) (CC BY-NC 4.0)
 - [x] [CONTRIBUTING.md](community/CONTRIBUTING.md)
 - [x] [CODE_OF_CONDUCT.md](community/CODE_OF_CONDUCT.md)
 - [x] [SECURITY.md](community/SECURITY.md)
@@ -178,4 +178,4 @@ The dashboard displays errors in a user-friendly way via toast notifications in 
 
 ## 🛡️ License
 
-MIT — see [LICENSE](community/LICENSE) for details.
+Creative Commons Attribution-NonCommercial 4.0 International — see [LICENSE](community/LICENSE) for details.
